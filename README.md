@@ -1,5 +1,5 @@
-# Rjac 
-Rotating Joints According to Camera
+# <center> Rjac </center>
+<center> Rotating Joints According to Camera </center>
 
 # What is Rjac?
 
