@@ -7,7 +7,7 @@ Rjac (pronounced as "r-jack") is an object-oriented module used to rotate charac
 
 For example:
 
-- ![Video 1](https://gyazo.com/67d32a30da5bdbfc2213c5ca99354a1a)
+- ![Video 1](https://github.com/Giant427/Rjac/blob/main/Media/Video1.mp4)
   
 - ![Video 2](https://gyazo.com/c51e27d0a2b4e8774e2e76e66b1ea0eb)
 
