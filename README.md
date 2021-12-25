@@ -59,10 +59,10 @@ for _,v in pairs(Configurations) do
 	Rjac:AddBodyJoint(v.BodyPart, v.BodyJoint, v.MultiplierVector)
 end
 
-while task.wait() do
+game:GetService("RunService").Heartbeat:Connect(function()
 	Rjac:UpdateBodyPosition(game.Workspace.CurrentCamera.CFrame)
 	Rjac:UpdateCharacter()
-end
+end)
 ```
 
 ***
