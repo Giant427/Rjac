@@ -78,4 +78,4 @@ There are plenty of ways to install:
 
 - [Roblox model](https://www.roblox.com/library/8353530615/Rjac)(recommended)
 - [GitHub Repository File](https://github.com/Giant427/Rjac/blob/main/Rjac.lua)
-- [GitHub Repository Roblox Place](https://github.com/Giant427/Rjac.rbxl)
+- [GitHub Repository Roblox Place](https://github.com/Giant427/Rjac/blob/main/Rjac.rbxl)
