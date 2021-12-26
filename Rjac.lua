@@ -202,6 +202,30 @@ do
 	end
 end
 
+-- Destroy
+
+function Rjac:Destroy()
+	self.Enabled = false
+
+	for i,v in pairs(self.Configurations) do
+		if self.Character then
+			local CharacterBodyPart = self.Character:FindFirstChild(v.BodyPart)
+			local CharacterBodyJoint
+			if CharacterBodyPart then
+				CharacterBodyJoint = CharacterBodyPart:FindFirstChild(v.BodyJoint)
+
+				if CharacterBodyJoint then
+					CharacterBodyJoint.C0 = v.JointOffset
+				end
+			end
+		end
+	end
+
+	for i,v in ipairs(self) do
+		table.remove(self, i)
+	end
+end
+
 -----------------
 -- Rjac module --
 -----------------

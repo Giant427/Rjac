@@ -42,3 +42,8 @@ Updates the joint offset configuration of the given `BodyJoint`. Can be used whe
 
 > `Void` RjacProfile:UpdateBodyJointMultiplierVector([`String`](https://developer.roblox.com/en-us/articles/String) BodyPart, [`String`](https://developer.roblox.com/en-us/articles/String) BodyJoint, [`Vector3`](https://developer.roblox.com/en-us/api-reference/datatype/Vector3) MultiplierVector) <br> <br>
 Updates the multiplier vector of the given `BodyJoint`. Not many use cases for this but just in case...
+
+<br>
+
+> `Void` RjacProfile:Destroy() <br> <br>
+Simply removes all the contents of the profile.
