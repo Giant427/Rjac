@@ -16,8 +16,6 @@ This is very simple to use with simplicity, flexibilty, and customization.
 
 # How to use it?
 
-First off you need to create a folder in `Workspace` and name it as `Rjac`.
-
 As I said it's pretty simple to use but not very small, basic example:
 
 ```lua

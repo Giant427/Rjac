@@ -1,4 +1,8 @@
-local RjacFolder = workspace:FindFirstChild("Rjac")
+--[[
+	Made by: GiantDefender427
+
+	Devforum Post: https://devforum.roblox.com/t/rjac-rotating-joints-according-to-camera/1601251
+]]
 
 ----------
 -- Rjac --
@@ -14,8 +18,7 @@ Rjac.Player = nil
 Rjac.Character = nil
 
 Rjac.Configurations = {}
-Rjac.TiltPart = nil
-Rjac.BodyPosition = nil
+Rjac.Direction = Vector3.new(0, 0, 0)
 Rjac.Enabled = false
 
 ---------------
@@ -25,29 +28,13 @@ Rjac.Enabled = false
 -- Initiate
 
 function Rjac:Initiate()
+	self.Character = self.Player.Character
+
 	-- Character added
 
 	self.Player.CharacterAdded:Connect(function(Character)
 		self:CharacterAdded(Character)
 	end)
-
-	-- Build TiltPart
-
-	self.TiltPart = Instance.new("Part")
-	self.TiltPart.Name = self.Player.Name
-	self.TiltPart.Size = Vector3.new(0.1, 0.1, 0.1)
-	self.TiltPart.Transparency = 1
-	self.TiltPart.CanTouch = false
-	self.TiltPart.CanCollide = false
-	self.TiltPart.Parent = RjacFolder
-
-	-- Build BodyPosition
-
-	self.BodyPosition = Instance.new("BodyPosition")
-	self.BodyPosition.D = 5000
-	self.BodyPosition.P = 1000000
-	self.BodyPosition.MaxForce = Vector3.new(1,1,1) * 1000000
-	self.BodyPosition.Parent = self.TiltPart
 end
 
 -- Character added
@@ -85,7 +72,7 @@ function Rjac:UpdateCharacter()
 		-- Drops unnecesarry errors when character is being removed or player is leaving, kind of stupid to add "if"s every now and then, "pcall" is better
 
 		pcall(function()
-			local JointValue = CFrame.Angles(math.asin(self.TiltPart.Position.Y) * v.MultiplierVector.X, -math.asin(self.TiltPart.Position.X) * v.MultiplierVector.Y, math.asin(self.TiltPart.Position.Z) * v.MultiplierVector.Z)
+			local JointValue = CFrame.Angles(math.asin(self.Direction.Y) * v.MultiplierVector.X, -math.asin(self.Direction.X) * v.MultiplierVector.Y, math.asin(self.Direction.Z) * v.MultiplierVector.Z)
 
 			local BodyPart = self.Player.Character:FindFirstChild(v.BodyPart)
 			local BodyJoint
@@ -103,7 +90,7 @@ end
 
 -- Update body position
 
-function Rjac:UpdateBodyPosition(CameraCFrame)
+function Rjac:UpdateDirection(CameraCFrame)
 	if not self.Character then
 		warn("Character does not exist for Player:", self.Player.Name)
 		return
@@ -115,7 +102,7 @@ function Rjac:UpdateBodyPosition(CameraCFrame)
 		Value = Vector3.new(Value.X, -0.965, Value.Z)
 	end
 
-	self.BodyPosition.Position = Value
+	self.Direction = Value
 end
 
 -- Add/Remove body joint
