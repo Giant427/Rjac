@@ -1,3 +1,5 @@
+New [website](https://giant427.github.io/Rjac/) built using [Moonwave](https://upliftgames.github.io/moonwave/)!!
+
 # <center> Rjac </center>
 <center> Rotating Joints According to Camera </center>
 
@@ -7,9 +9,9 @@ Rjac (pronounced as "r-jack") is an object-oriented module used to rotate charac
 
 For example:
 
-![Video 1](https://i.gyazo.com/67d32a30da5bdbfc2213c5ca99354a1a.gif)
+![Video 1](upload://1VTYjxHHwCMQzHaxWFfghBaafCZ.gif)
 
-![Video 2](https://i.gyazo.com/c51e27d0a2b4e8774e2e76e66b1ea0eb.gif)
+![Video 2](upload://iDVV9eEu6kI4FXl3SO5NsiKWriV.gif)
 
 This mechanic is used in a **lot** of games. 
 This is very simple to use with simplicity, flexibilty, and customization.
@@ -79,7 +81,7 @@ Now let's break this down a bit and see what it means
 
 There is only one way of ***fully*** understanding how to use this, which is by experimenting a ***lot*** with the module itself.
 
-Taking a look at the [Documentation](https://github.com/Giant427/Rjac/blob/main/DOCUMENTATION.md) is ***heavily*** encouraged to use the module to its full potential.
+Taking a look at the [Documentation](https://giant427.github.io/Rjac/api/Rjac) is ***heavily*** encouraged to use the module to its full potential.
 
 # License 
 ## Mozilla Public License 2.0
