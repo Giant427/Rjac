@@ -317,10 +317,10 @@ local RjacModule = {}
 -----------------
 
 --[=[
-	Destroy the profile
+	Create a new RjacProfile
 
 	@param ProfileInfo table -- The data which will be overwritten while returning the class
-	@return RjacProfile table -- Returns the RjacProfile which has bee fully creating according to the provided ProfileInfo
+	@return RjacProfile table -- Returns the RjacProfile which has been fully creating according to the provided ProfileInfo
 ]=]
 function RjacModule:New(ProfileInfo)
 	ProfileInfo = ProfileInfo or {}
