@@ -2,23 +2,6 @@ title = "Rjac"  # From Git
 gitRepoUrl = "https://github.com/Giant427/Rjac" # From Git
 
 gitSourceBranch = "main"
-changelog = true
-classOrder = []
-
-[docusaurus]
-onBrokenLinks = "throw"
-onBrokenMarkdownLinks = "warn"
-favicon = ""
-
-# From git:
-organizationName = "Giant427"
-projectName = "Rjac"
-url = "https://Giant427.github.io"
-baseUrl = "/Rjac"
-tagline = "Rotating Joints According to Camera"
-
-[navbar]
-hideableSidebar = true
 
 [footer]
 style = "dark"

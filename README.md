@@ -92,7 +92,7 @@ Read the full document [here](https://github.com/Giant427/Rjac/blob/main/LICENSE
 There are plenty of ways to install:
 
 - [Roblox model](https://www.roblox.com/library/8353530615/Rjac) (recommended)
-- [GitHub Repository File](https://github.com/Giant427/Rjac/blob/main/Rjac.lua)
+- [GitHub Repository File](https://github.com/Giant427/Rjac/blob/main/src/Rjac.lua)
 - [GitHub Repository Roblox Place](https://github.com/Giant427/Rjac/blob/main/Rjac.rbxl)
 - [GitHub Repository Roblox Model](https://github.com/Giant427/Rjac/blob/main/Rjac.rbxm)
 

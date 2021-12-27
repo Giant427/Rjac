@@ -20,15 +20,35 @@ local Rjac = {}
 ---------------
 
 --[=[
-	@prop name Player
+	@prop Player Player
 	@within Rjac
 	The player/owner of this profile
 ]=]
 Rjac.Player = nil
+--[=[
+	@prop Character Model
+	@within Rjac
+	The character of the player/owner of this profile
+]=]
 Rjac.Character = nil
 
+--[=[
+	@prop Configurations table
+	@within Rjac
+	The configurations for the joints, which will be rotated
+]=]
 Rjac.Configurations = {}
+--[=[
+	@prop Direction Vector3
+	@within Rjac
+	The direction of the camera according to the Character's HumanoidRootPart
+]=]
 Rjac.Direction = Vector3.new(0, 0, 0)
+--[=[
+	@prop Enabled boolean
+	@within Rjac
+	Controls if the parts will rotate per frame
+]=]
 Rjac.Enabled = false
 
 ---------------
