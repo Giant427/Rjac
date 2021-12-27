@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[217],{97868:function(s){s.exports=JSON.parse('{"sourceUrl":"https://github.com/Giant427/Rjac/blob/main","baseUrl":"/Rjac/","classOrder":[],"apiCategories":[]}')}}]);
