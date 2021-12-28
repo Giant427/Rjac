@@ -60,7 +60,7 @@ for _,v in pairs(Configurations) do
 end
 
 game:GetService("RunService").Heartbeat:Connect(function()
-	Rjac:UpdateBodyPosition(game.Workspace.CurrentCamera.CFrame)
+	Rjac:UpdateDirection(game.Workspace.CurrentCamera.CFrame)
 	Rjac:UpdateCharacter()
 end)
 ```
