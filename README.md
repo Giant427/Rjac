@@ -1,4 +1,4 @@
-New [website](https://giant427.github.io/Rjac/) built using [Moonwave](https://upliftgames.github.io/moonwave/)!!
+[Website](https://giant427.github.io/Rjac/) built using [Moonwave](https://upliftgames.github.io/moonwave/)!!
 
 # <center> Rjac </center>
 <center> Rotating Joints According to Camera </center>
