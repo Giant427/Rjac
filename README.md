@@ -1,9 +1,9 @@
 [Website](https://giant427.github.io/Rjac/) built using [Moonwave](https://upliftgames.github.io/moonwave/)!!
 
-# <center> Rjac </center>
+## <center> Rjac </center>
 <center> Rotating Joints According to Camera </center>
 
-# What is Rjac?
+## What is Rjac?
 
 Rjac (pronounced as "r-jack") is an object-oriented module used to rotate character body parts according to camera direction.
 
@@ -16,7 +16,7 @@ For example:
 This mechanic is used in a **lot** of games. 
 This is very simple to use with simplicity, flexibilty, and customization.
 
-# How to use it?
+## How to use it?
 
 As I said it's pretty simple to use but not very small, basic example:
 
@@ -83,13 +83,13 @@ There is only one way of ***fully*** understanding how to use this, which is by 
 
 Taking a look at the [Documentation](https://giant427.github.io/Rjac/api/Rjac) is ***heavily*** encouraged to use the module to its full potential.
 
-# License 
-## Mozilla Public License 2.0
+## License 
+### Mozilla Public License 2.0
 Permissions of this weak copyleft license are conditioned on making available source code of licensed files and modifications of those files under the same license (or in certain cases, one of the GNU licenses). Copyright and license notices must be preserved. Contributors provide an express grant of patent rights. However, a larger work using the licensed work may be distributed under different terms and without source code for files added in the larger work.
 
 Read the full document [here](https://github.com/Giant427/Rjac/blob/main/LICENSE).
 
-# Installation
+## Installation
 
 There are plenty of ways to install:
 

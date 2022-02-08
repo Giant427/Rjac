@@ -4,282 +4,86 @@
 	Devforum Post: https://devforum.roblox.com/t/rjac-rotating-joints-according-to-camera/1601251
 ]]
 
-----------
--- Rjac --
-----------
-
 --[=[
-    @class Rjac
+	@class RjacProfile
 
-    This is the main Rjac class
+	RjacProfile is an object used to rotate the character body parts according to camera direction.
 ]=]
-local Rjac = {}
+local RjacProfile = {}
 
----------------
--- Variables --
----------------
+-- Properties
 
---[=[
-	@prop Player Player
-	@within Rjac
-	The player/owner of this profile
-]=]
-Rjac.Player = nil
 --[=[
 	@prop Character Model
-	@within Rjac
-	The character of the player/owner of this profile
+	@within RjacProfile
+	A Model controlled by the Player that contains a Humanoid, body parts, scripts and other objects.
 ]=]
-Rjac.Character = nil
+RjacProfile.Character = nil
 
 --[=[
 	@prop Configurations table
-	@within Rjac
-	The configurations for the joints, which will be rotated
+	@within RjacProfile
+	Configurations for rotating, joint offsets, multipliers.
 ]=]
-Rjac.Configurations = {}
---[=[
-	@prop Direction Vector3
-	@within Rjac
-	The direction of the camera according to the Character's HumanoidRootPart
-]=]
-Rjac.Direction = Vector3.new(0, 0, 0)
---[=[
-	@prop Enabled boolean
-	@within Rjac
-	Controls if the parts will rotate per frame
-]=]
-Rjac.Enabled = false
-
----------------
--- Functions --
----------------
-
--- Initiate
+RjacProfile.Configurations = {}
 
 --[=[
-    Basically start the processing of the Object.
+	@prop Enabled bool
+	@within RjacProfile
+	Determines whether body parts will be rotated.
 ]=]
-function Rjac:Initiate()
-	self.Character = self.Player.Character
-
-	-- Character added
-
-	self.Player.CharacterAdded:Connect(function(Character)
-		self:CharacterAdded(Character)
-	end)
-end
-
--- Character added
+RjacProfile.Enabled = false
 
 --[=[
-	Rotates the body joints once, according to the camera direction.
+	@prop Player Player
+	@within RjacProfile
+	Player/owner of the RjacProfile.
 ]=]
+RjacProfile.Player = nil
 
-function Rjac:CharacterAdded(Character)
-	Character:WaitForChild("Humanoid")
-	self.Character = Character
+--[=[
+	@prop TiltDirection Vector3
+	@within RjacProfile
+	Angle according to which the body parts are to be rotated.
+]=]
+RjacProfile.TiltDirection = Vector3.new(0, 0, 0)
 
-	-- Replace body joint offsets
+--[=[
+	Add body joint to the list of joints which are to be rotated.
 
+	@param BodyPart string -- Name of the body part.
+	@param BodyJoint string -- Name of the body joint.
+	@param MultiplierVector Vector3 -- Multiplier by which the joint will be multiplied in rotations.
+]=]
+function RjacProfile:AddBodyJoint(BodyPart, BodyJoint, MultiplierVector)
 	for _,v in pairs(self.Configurations) do
-		local BodyPart = self.Character:FindFirstChild(v.BodyPart)
-		local BodyJoint
-		if BodyPart then
-			BodyJoint = BodyPart:FindFirstChild(v.BodyJoint)
-
-			if BodyJoint then
-				v.JointOffset = BodyJoint.C0
+		if v.BodyPart == BodyPart and v.BodyJoint == BodyJoint then
+			return
+		end
+	end
+	local Configuration = {
+		BodyPart = BodyPart,
+		BodyJoint = BodyJoint,
+		JointOffset = CFrame.new(),
+		MultiplierVector = MultiplierVector,
+	}
+	table.insert(self.Configurations, Configuration)
+	if self.Character then
+		local CharacterBodyPart = self.Character:FindFirstChild(Configuration.BodyPart)
+		local CharacterBodyJoint
+		if CharacterBodyPart then
+			CharacterBodyJoint = CharacterBodyPart:FindFirstChild(Configuration.BodyJoint)
+			if CharacterBodyJoint then
+				self:UpdateBodyJointOffset(Configuration.BodyPart, Configuration.BodyJoint, CharacterBodyJoint.C0)
 			end
 		end
 	end
 end
-
--- Update character
 
 --[=[
-	Rotates the body joints once, according to the camera direction.
+	Destroy the object completely.
 ]=]
-function Rjac:UpdateCharacter()
-	if not self.Enabled then return end
-
-	if not self.Character then
-		warn("Character does not exist for Player:", self.Player.Name)
-		return
-	end
-
-	for _,v in pairs(self.Configurations) do
-		-- Drops unnecesarry errors when character is being removed or player is leaving, kind of stupid to add "if"s every now and then, "pcall" is better
-
-		pcall(function()
-			local JointValue = CFrame.Angles(math.asin(self.Direction.Y) * v.MultiplierVector.X, -math.asin(self.Direction.X) * v.MultiplierVector.Y, math.asin(self.Direction.Z) * v.MultiplierVector.Z)
-
-			local BodyPart = self.Player.Character:FindFirstChild(v.BodyPart)
-			local BodyJoint
-
-			if BodyPart then
-				BodyJoint = BodyPart:FindFirstChild(v.BodyJoint)
-
-				if BodyJoint then
-					BodyJoint.C0 = v.JointOffset * JointValue
-				end
-			end
-		end)
-	end
-end
-
--- Update body position
-
---[=[
-	Updates the direction of where the character is supposed to look at.
-
-	@param CameraCFrame CFrame -- The camera CFrame of the player
-]=]
-function Rjac:UpdateDirection(CameraCFrame)
-	if not self.Character then
-		warn("Character does not exist for Player:", self.Player.Name)
-		return
-	end
-
-	local Value = self.Character.HumanoidRootPart.CFrame:toObjectSpace(CameraCFrame).LookVector
-
-	if Value.Y < -0.965 then
-		Value = Vector3.new(Value.X, -0.965, Value.Z)
-	end
-
-	self.Direction = Value
-end
-
--- Add/Remove body joint
-
-do
-	-- Add body joint
-
-	--[=[
-		Adds a body joint which will be affected by the Object.
-
-		@param BodyPart string -- The name of the part which will be affected
-		@param BodyJoint string -- The name of the joint which will be rotated
-		@param MultiplierVector Vector3 -- The value which affects the rotations
-	]=]
-	function Rjac:AddBodyJoint(BodyPart, BodyJoint, MultiplierVector)
-		for _,v in pairs(self.Configurations) do
-			if v.BodyPart == BodyPart and v.BodyJoint == BodyJoint then
-				return
-			end
-		end
-
-		-- Create configuration
-
-		local Configuration = {
-			BodyPart = BodyPart,
-			BodyJoint = BodyJoint,
-			JointOffset = CFrame.new(),
-			MultiplierVector = MultiplierVector,
-		}
-
-		-- Insert Configuration
-
-		table.insert(self.Configurations, Configuration)
-
-		-- Set joint offset
-
-		if self.Character then
-			local CharacterBodyPart = self.Character:FindFirstChild(Configuration.BodyPart)
-			local CharacterBodyJoint
-			if CharacterBodyPart then
-				CharacterBodyJoint = CharacterBodyPart:FindFirstChild(Configuration.BodyJoint)
-
-				if CharacterBodyJoint then
-					self:UpdateBodyJointOffset(Configuration.BodyPart, Configuration.BodyJoint, CharacterBodyJoint.C0)
-				end
-			end
-		end
-	end
-
-	-- Remove body joint
-
-	--[=[
-		Removes a body joint which will be affected by the Object.
-
-		@param BodyPart string -- The name of the part which will be affected
-		@param BodyJoint string -- The name of the joint which will be rotated
-	]=]
-	function Rjac:RemoveBodyJoint(BodyPart, BodyJoint)
-		-- Remove and store configuration
-
-		local Configuration
-
-		for i,v in pairs(self.Configurations) do
-			if v.BodyPart == BodyPart and v.BodyJoint == BodyJoint then
-				Configuration = v
-				table.remove(self.Configurations, i)
-				break
-			end
-		end
-
-		-- Reset joint offset in character
-
-		if self.Character then
-			local CharacterBodyPart = self.Character:FindFirstChild(Configuration.BodyPart)
-			local CharacterBodyJoint
-			if CharacterBodyPart then
-				CharacterBodyJoint = CharacterBodyPart:FindFirstChild(Configuration.BodyJoint)
-
-				if CharacterBodyJoint then
-					CharacterBodyJoint.C0 = Configuration.JointOffset
-				end
-			end
-		end
-	end
-end
-
--- Body joint properties
-
-do
-	-- Update body joint offset
-
-	--[=[
-		Updates the joint offset configuration of the given BodyJoint. Can be used when the character is being rotated but the body parts still need to face the camera direction.
-
-		@param BodyPart string -- The name of the part which will be affected
-		@param BodyJoint string -- The name of the joint which will be rotated
-		@param JointOffset CFrame -- The offset by which the joint will be rotated
-	]=]
-	function Rjac:UpdateBodyJointOffset(BodyPart, BodyJoint, JointOffset)
-		for _,v in pairs(self.Configurations) do
-			if v.BodyPart == BodyPart and v.BodyJoint == BodyJoint then
-				v.JointOffset = JointOffset
-				break
-			end
-		end
-	end
-
-	-- Update body joint multiplier vector
-
-	--[=[
-		Adds a body joint which will be affected by the Object.
-
-		@param BodyPart string -- The name of the part which will be affected
-		@param BodyJoint string -- The name of the joint which will be rotated
-		@param MultiplierVector Vector3 -- The value which affects the rotations
-	]=]
-	function Rjac:UpdateBodyJointMultiplierVector(BodyPart, BodyJoint, MultiplierVector)
-		for _,v in pairs(self.Configurations) do
-			if v.BodyPart == BodyPart and v.BodyJoint == BodyJoint then
-				v.MultiplierVector = MultiplierVector
-				break
-			end
-		end
-	end
-end
-
--- Destroy
-
---[=[
-	Destroy the profile
-]=]
-function Rjac:Destroy()
+function RjacProfile:Destroy()
 	self.Enabled = false
 
 	for i,v in pairs(self.Configurations) do
@@ -301,31 +105,162 @@ function Rjac:Destroy()
 	end
 end
 
------------------
--- Rjac module --
------------------
+--[=[
+	Starter function to assemble the whole profile for functionality
+]=]
+function RjacProfile:Initiate()
+	self.Character = self.Player.Character
+	self.Player.CharacterAdded:Connect(function(Character)
+		self:onCharacterAdded(Character)
+	end)
+end
 
 --[=[
-    @class RjacModule
+	Function ran when a new character is added for the player
 
-    This is the module which build the RjacProfile for the player
+	@param Character Model -- A Model controlled by the Player that contains a Humanoid, body parts, scripts and other objects.
+]=]
+function RjacProfile:onCharacterAdded(Character)
+	-- Wait till the character appearance has fully loaded for proper joint offsets
+	Character:WaitForChild("Humanoid")
+	self.Character = Character
+	self:ResetJointOffsets()
+end
+
+--[=[
+	Remove body joint from the list of joints which are to be rotated.
+
+	@param BodyPart string -- Name of the body part.
+	@param BodyJoint string -- Name of the body joint.
+]=]
+function RjacProfile:RemoveBodyJoint(BodyPart, BodyJoint)
+	local Configuration
+	for i,v in pairs(self.Configurations) do
+		if v.BodyPart == BodyPart and v.BodyJoint == BodyJoint then
+			Configuration = v
+			table.remove(self.Configurations, i)
+			break
+		end
+	end
+	if self.Character then
+		local CharacterBodyPart = self.Character:FindFirstChild(Configuration.BodyPart)
+		local CharacterBodyJoint
+		if CharacterBodyPart then
+			CharacterBodyJoint = CharacterBodyPart:FindFirstChild(Configuration.BodyJoint)
+			if CharacterBodyJoint then
+				CharacterBodyJoint.C0 = Configuration.JointOffset
+			end
+		end
+	end
+end
+
+--[=[
+	Reset joint offset configurations.
+]=]
+function RjacProfile:ResetJointOffsets()
+	for _,v in pairs(self.Configurations) do
+		local BodyPart = self.Character:FindFirstChild(v.BodyPart)
+		local BodyJoint
+		if BodyPart then
+			BodyJoint = BodyPart:FindFirstChild(v.BodyJoint)
+			if BodyJoint then
+				v.JointOffset = BodyJoint.C0
+			end
+		end
+	end
+end
+
+--[=[
+	Update body multiplier vector configuration.
+	
+	@param BodyPart string -- Name of the body part.
+	@param BodyJoint string -- Name of the body joint.
+	@param MultiplierVector Vector3 -- Multiplier by which the joint will be multiplied in rotations.
+]=]
+function RjacProfile:UpdateBodyJointMultiplierVector(BodyPart, BodyJoint, MultiplierVector)
+	for _,v in pairs(self.Configurations) do
+		if v.BodyPart == BodyPart and v.BodyJoint == BodyJoint then
+			v.MultiplierVector = MultiplierVector
+			break
+		end
+	end
+end
+
+--[=[
+	Update body joint offset configuration.
+
+	@param BodyPart string -- Name of the body part.
+	@param BodyJoint string -- Name of the body joint.
+	@param JointOffset CFrame -- Offset by which the joint will be rotated.
+]=]
+function RjacProfile:UpdateBodyJointOffset(BodyPart, BodyJoint, JointOffset)
+	for _,v in pairs(self.Configurations) do
+		if v.BodyPart == BodyPart and v.BodyJoint == BodyJoint then
+			v.JointOffset = JointOffset
+			break
+		end
+	end
+end
+
+--[=[
+	Rotate the body joints of the character once.
+]=]
+function RjacProfile:UpdateCharacter()
+	if not self.Enabled then return end
+	if not self.Character then
+		warn("Character does not exist for Player:", self.Player.Name)
+		return
+	end
+	for _,v in pairs(self.Configurations) do
+		-- Drops unnecesarry errors when character is being removed or player is leaving, kind of stupid to add "if"s every now and then, "pcall" is better
+		pcall(function()
+			local JointValue = CFrame.Angles(math.asin(self.TiltDirection.Y) * v.MultiplierVector.X, -math.asin(self.TiltDirection.X) * v.MultiplierVector.Y, math.asin(self.TiltDirection.Z) * v.MultiplierVector.Z)
+			local BodyPart = self.Player.Character:FindFirstChild(v.BodyPart)
+			local BodyJoint
+			if BodyPart then
+				BodyJoint = BodyPart:FindFirstChild(v.BodyJoint)
+				if BodyJoint then
+					BodyJoint.C0 = v.JointOffset * JointValue
+				end
+			end
+		end)
+	end
+end
+
+--[=[
+	Update tilt direction which affects the rotation of body parts.
+
+	@param CameraCFrame CFrame -- CFrame of the Player camera.
+]=]
+function RjacProfile:UpdateTiltDirection(CameraCFrame)
+	if not self.Character then
+		warn("Character does not exist for Player:", self.Player.Name)
+		return
+	end
+	local TiltDirection = self.Character.HumanoidRootPart.CFrame:toObjectSpace(CameraCFrame).LookVector
+	-- If TiltDirection.Y is less than -0.965, character shows weird behaviour
+	if TiltDirection.Y < -0.965 then
+		TiltDirection = Vector3.new(TiltDirection.X, -0.965, TiltDirection.Z)
+	end
+	self.TiltDirection = TiltDirection
+end
+
+--[=[
+	@class RjacModule
+
+	Used as a constructor for RjacProfile
 ]=]
 local RjacModule = {}
-
------------------
--- Constructor --
------------------
-
 --[=[
-	Create a new RjacProfile
-
-	@param ProfileInfo table -- The data which will be overwritten while returning the class
-	@return RjacProfile table -- Returns the RjacProfile which has been fully creating according to the provided ProfileInfo
+	Constructor for RjacProfile
+	
+	@param ProfileInfo table -- The data which will be overwrite the default properties of the class.
+	@return RjacProfile -- Returns the RjacProfile which has been created according to the provided ProfileInfo
 ]=]
 function RjacModule:New(ProfileInfo)
 	ProfileInfo = ProfileInfo or {}
-	setmetatable(ProfileInfo, Rjac)
-	Rjac.__index = Rjac
+	setmetatable(ProfileInfo, RjacProfile)
+	RjacProfile.__index = RjacProfile
 	return ProfileInfo
 end
 
